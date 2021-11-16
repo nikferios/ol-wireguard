@@ -1,0 +1,26 @@
+version: "2.1"
+services:
+  wireguard:
+    image: linuxserver/wireguard:version-v1.0.20210914
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Athens
+      - SERVERURL=${SERVERURL} #optional
+      - SERVERPORT=${SERVERPORT} #optional
+      - PEERS=${PEERS} #optional
+      - PEERDNS=auto #optional
+      - INTERNAL_SUBNET=${INTERNAL_SUBNET} #optional
+      - ALLOWEDIPS=${ALLOWEDIPS}
+    volumes:
+      - /overlogic/configs/wireguard:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - ${SERVERPORT}:${SERVERPORT}/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
